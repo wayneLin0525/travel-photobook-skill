@@ -2,7 +2,7 @@
 
 将旅行照片文件夹制作成精选照片书，最终只有一个PDF和一个可离线翻阅的单文件HTML。选片与设计规则共用，宿主使用自己的视觉能力，不绑定对话模型厂商，也无需额外大模型API Key。
 
-**v0.2.0 为公开测试版，首先提供 Apple Silicon Mac 运行包。** 已通过本机 Skill 入口完成真实旅行照片书制作；WorkBuddy 等其他助手的一句话安装与完整制作仍需真实联调。Windows、Intel Mac 和其他宿主的状态见下表，未测试项不算已支持。
+**v0.2.1 为公开测试版，首先提供 Apple Silicon Mac 运行包。** 已通过本机 Skill 入口完成真实旅行照片书制作；WorkBuddy 等其他助手的一句话安装与完整制作仍需真实联调。Windows、Intel Mac 和其他宿主的状态见下表，未测试项不算已支持。
 
 ## 用户使用方式
 
@@ -10,7 +10,7 @@
 
 > 帮我安装 https://github.com/wayneLin0525/travel-photobook-skill 中的旅行照片书 Skill，技能目录是 skills/travel-photobook。安装后，把「照片文件夹的绝对路径」制作成照片书，输出到「新的成品文件夹」，只交付 PDF 和可以离线翻页的 HTML。请自动完成运行组件、模型准备和制作流程。
 
-也可以从 [v0.2.0 下载页](https://github.com/wayneLin0525/travel-photobook-skill/releases/tag/v0.2.0) 导入 `travel-photobook-0.2.0-generic.zip`；WorkBuddy 需要扩展元数据时使用 `travel-photobook-0.2.0-workbuddy.zip`。助手根据其正常技能安装入口安装，不能把整个源码仓库当作已经安装好的技能目录。
+也可以从 [v0.2.1 下载页](https://github.com/wayneLin0525/travel-photobook-skill/releases/tag/v0.2.1) 导入 `travel-photobook-0.2.1-generic.zip`；WorkBuddy 需要扩展元数据时使用 `travel-photobook-0.2.1-workbuddy.zip`。助手根据其正常技能安装入口安装，不能把整个源码仓库当作已经安装好的技能目录。
 
 助手安装`skills/travel-photobook`，按SKILL.md完成运行包及模型准备和持续制作。平台首次目录与执行授权仍按其正常机制处理。若只有技能说明能安装、程序不能运行，不报告安装制作成功。
 
@@ -44,3 +44,5 @@
 本轮完成598张元数据字段回归、593张真实编码回归；1000/3000张合成素材验证的是本地流程和检索规模，不代表几千张真实照片的视觉精选已验收。小样的全部页面实际审阅，PDF/HTML由独立运行包输出，并通过六种窗口和离线翻页浏览器检查。
 
 资源条款见THIRD_PARTY_NOTICES.md。用户最终结果目录没有日志、ZIP或说明；内部job缓存保留回溯材料。HTML可离线阅读，制作中的宿主视觉能力可能联网。
+
+`v0.2.1` 修复了首次安装时特定 Python 发行版 TLS 策略文件未随运行包携带的问题，并在 doctor 增加 TLS 上下文检查。v0.2.0 不用于新的安装测试。此修复不改变选片和设计规则。

@@ -4,7 +4,7 @@
 
 - Codex：让其技能安装器从仓库发现`skills/travel-photobook`；使用当前文件、图片和执行工具。可选界面信息在agents/openai.yaml。
 - Claude Code：公共技能可放`.claude/skills/travel-photobook`或个人技能目录；其他Claude聊天/工作环境另外验证。
-- WorkBuddy：从 https://github.com/wayneLin0525/travel-photobook-skill/releases/tag/v0.2.0 导入发行的技能包；技能源码目录为`skills/travel-photobook`。若平台要求市场字段，使用build_skill.py生成的WorkBuddy包，不改变选片流程。
+- WorkBuddy：从 https://github.com/wayneLin0525/travel-photobook-skill/releases/tag/v0.2.1 导入发行的技能包；技能源码目录为`skills/travel-photobook`。若平台要求市场字段，使用build_skill.py生成的WorkBuddy包，不改变选片流程。
 - QwenWork / Qwen Code：按各自安装入口导入；两者不是同一宿主。
 - 豆包工作、Muse、Grok Bot：待确认具体版本和真实工具能力，不能仅凭名称声称已通过。
 

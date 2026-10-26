@@ -31,7 +31,7 @@ def _download_locked(url,destination,sha256,*,retries):
     last = None
     for attempt in range(retries):
         offset = partial.stat().st_size if partial.exists() else 0
-        headers = {'User-Agent': 'travel-photobook/0.2.0', 'Accept-Encoding': 'identity'}
+        headers = {'User-Agent': 'travel-photobook/0.2.1', 'Accept-Encoding': 'identity'}
         if offset:
             headers['Range'] = f'bytes={offset}-'
         try:
@@ -47,6 +47,9 @@ def _download_locked(url,destination,sha256,*,retries):
             os.replace(partial, destination)
             return destination
         except (OSError, WorkflowError) as error:
+            if os.environ.get('PHOTOBOOK_DEBUG') == '1':
+                import traceback
+                traceback.print_exc()
             last = error
             if isinstance(error, WorkflowError):
                 partial.unlink(missing_ok=True)

@@ -12,6 +12,17 @@ from photobook.runtime import cache_root, exiftool_command, platform_tag
 from tests.fixtures import make_photos
 
 
+def test_doctor_rejects_missing_tls_runtime_resource(monkeypatch):
+    from photobook.driver import doctor
+    def missing_policy(*args, **kwargs):
+        raise FileNotFoundError('missing TLS trust policy')
+    monkeypatch.setattr('ssl.create_default_context', missing_policy)
+    result = doctor()
+    assert result['state'] == 'ENVIRONMENT_MISSING'
+    check = next(c for c in result['checks'] if c['name'] == 'tls_context')
+    assert not check['ok'] and 'missing TLS trust policy' in check['error']
+
+
 def test_embedded_exif_needs_no_executable(tmp_path, monkeypatch):
     source = make_photos(tmp_path / 'photos', 300)
     monkeypatch.setenv('PATH', '')

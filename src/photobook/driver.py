@@ -18,6 +18,12 @@ def doctor(source=None):
     checks.append(dict(name='font', ok=Path(font_path()).is_file(), path=font_path()))
     from .metadata import READER_VERSION
     checks.append(dict(name='metadata_reader', ok=True, version=READER_VERSION))
+    import ssl
+    try:
+        context = ssl.create_default_context()
+        checks.append(dict(name='tls_context', ok=context.check_hostname and context.verify_mode == ssl.CERT_REQUIRED))
+    except OSError as error:
+        checks.append(dict(name='tls_context', ok=False, error=str(error)))
     if source:
         path = Path(source).expanduser().resolve()
         checks.append(dict(name='source', ok=path.is_dir() and os.access(path, os.R_OK), path=str(path)))
