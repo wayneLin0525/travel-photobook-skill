@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "travel-photobook"
+version = "0.2.0"
+description = "Portable travel photo-book skill and auditable local engine"
+license = "AGPL-3.0-only"
+requires-python = ">=3.12"
+dependencies = ["pillow", "pillow-heif", "numpy", "opencv-python-headless", "imagehash", "reportlab", "pymupdf", "open_clip_torch", "fonttools", "filelock"]
+
+[project.optional-dependencies]
+dev = ["pytest", "pyinstaller"]
+
+[project.scripts]
+photobook = "photobook.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["photobook*"]
+
+[tool.setuptools.package-data]
+photobook = ["web/*.html", "web/*.css", "web/*.js", "web/vendor/*", "resources/*.json", "resources/*.txt", "resources/fonts/*", "resources/tools/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -1,0 +1,4 @@
+interface:
+  display_name: "旅行照片书"
+  short_description: "从旅行照片文件夹自动精选、编排并生成可打印PDF与离线翻页照片书"
+  default_prompt: "用 $travel-photobook 把这个旅行照片文件夹制作成PDF和可离线翻阅的网页。"

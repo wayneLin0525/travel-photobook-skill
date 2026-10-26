@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "model": {
+    "id": "clip-vit-b32-openai-v1",
+    "architecture": "ViT-B-32-quickgelu",
+    "pretrained": "openai",
+    "filename": "ViT-B-32.pt",
+    "url": "https://openaipublic.azureedge.net/clip/models/40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af/ViT-B-32.pt",
+    "sha256": "40d365715913c9da98579312b702a82c18be219cc2a73407c4526f58eba950af",
+    "license": "MIT",
+    "license_url": "https://github.com/openai/CLIP/blob/main/LICENSE",
+    "usage": "Local image similarity candidates; final decisions require actual visual review."
+  }
+}

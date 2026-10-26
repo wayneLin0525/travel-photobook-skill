@@ -1,0 +1,32 @@
+name: Verify source and runtime
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, macos-15-intel, windows-2022]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-runtime.lock -e ".[dev]"
+      - run: python scripts/prepare_font.py
+      - run: python -m pytest -q
+      - run: python scripts/build_runtime.py --local-manifest
+      - run: python scripts/check_runtime.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: runtime-${{ matrix.os }}
+          path: |
+            dist/photobook-engine-*.zip
+            dist/photobook-engine-*.json
+            dist/runtime-check.json
+          if-no-files-found: error

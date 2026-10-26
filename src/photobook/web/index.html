@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light"><meta name="referrer" content="no-referrer">
+<link rel="icon" href="data:,">
+<title><!--TITLE--> · 翻页照片书</title>
+<style><!--STYLE--></style>
+</head>
+<body>
+<header class="topbar">
+  <h1 id="title"></h1>
+  <div class="tools"><button id="contents" aria-label="章节目录" aria-expanded="false" aria-controls="drawer">☷ <span>章节目录</span></button><button id="zoom" aria-label="放大当前页面">＋ <span>放大</span></button><button id="fullscreen" aria-label="切换全屏">⛶ <span>全屏</span></button></div>
+</header>
+<main id="reader">
+  <div id="stage" aria-label="照片书翻页区域"><div id="mount"></div></div>
+  <nav class="navigation" aria-label="照片书翻页"><button id="previous" aria-label="上一页">‹</button><span id="page-label" class="position" aria-live="polite"></span><button id="next" aria-label="下一页">›</button></nav>
+</main>
+<dialog id="drawer" aria-labelledby="contents-title"><div class="dialog-head"><h2 id="contents-title">章节目录</h2><button id="close-drawer" aria-label="关闭目录">✕</button></div><div id="chapters"></div><form id="jump-form"><label for="page-number">跳至内页</label><input type="number" id="page-number" min="1" required><button type="submit">前往 →</button></form></dialog>
+<dialog id="zoom-dialog" aria-labelledby="zoom-title"><div class="zoom-toolbar"><h2 id="zoom-title">页面放大</h2><div id="zoom-options"></div><button id="close-zoom" aria-label="关闭放大">✕</button></div><div class="zoom-scroll"><img id="zoom-image" alt="当前照片书页面"></div><p class="zoom-note">点击图片切换原图大小 · 可滚动查看细节</p></dialog>
+<div id="error" role="alert" hidden></div>
+<div id="status-message" role="status" aria-live="polite" hidden></div>
+<noscript>请在浏览器中启用 JavaScript，以使用翻页照片书。</noscript>
+<script type="application/json" id="book-data"><!--BOOK--></script>
+<script>/* StPageFlip 2.0.7
+<!--LICENSE-->
+*/
+<!--VENDOR-->
+</script>
+<script><!--SCRIPT--></script>
+</body></html>

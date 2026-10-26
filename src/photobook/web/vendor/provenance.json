@@ -1,0 +1,12 @@
+{
+  "name": "page-flip",
+  "version": "2.0.7",
+  "homepage": "https://github.com/Nodlik/StPageFlip",
+  "url": "https://registry.npmjs.org/page-flip/-/page-flip-2.0.7.tgz",
+  "npm_integrity": "sha512-96lQFUUz7r/LZzEUZJ3yBIMEKU9+m8HMFDzTvTdD6P7Ag/wXINjp9n0W7b4wanwnDbQETo4uNUoL3zMqpFxwGA==",
+  "archive_sha256": "871f33a759f927f83e92556beeebfe264aa78c2ccb2686092c1d43a19f5a0cf2",
+  "files": {
+    "page-flip.browser.js": "bbaca0bbef57a22bb66a3fc69d67baf9a17fb9a9c89ec9ed35e2b91abe4bd1e7",
+    "LICENSE.page-flip": "88d7b609a3be5efa2abe8648ddc35d5489579db5e06299545760df45c2c32d66"
+  }
+}
