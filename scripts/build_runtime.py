@@ -26,7 +26,7 @@ def main():
     if not (RESOURCES / 'fonts/NotoSansSC-Regular.ttf').is_file():
         subprocess.run([sys.executable, str(ROOT / 'scripts/prepare_font.py')], check=True)
     build = ROOT / 'build'; build.mkdir(exist_ok=True)
-    write(RESOURCES/'build-provenance.json',dict(version='0.2.1',platform=platform_tag(),
+    write(RESOURCES/'build-provenance.json',dict(version='0.2.2',platform=platform_tag(),
         source_sha256={p.name:file_hash(p) for p in sorted((ROOT/'src/photobook').glob('*.py'))}))
     os.environ['PYINSTALLER_CONFIG_DIR'] = str(build / 'pyinstaller-cache')
     command = [sys.executable, '-m', 'PyInstaller', '--noconfirm', '--onedir', '--name', 'photobook-engine',
@@ -54,14 +54,14 @@ def main():
     command.append(str(ROOT / 'scripts/engine_entry.py'))
     subprocess.run(command, check=True, cwd=ROOT)
     folder = ROOT / 'dist/photobook-engine'
-    # Keep licenses in the runtime, never as a third user photo-book artifact.
+    # Keep licenses in the runtime, never as an extra user photo-book artifact.
     licenses = folder / 'licenses'; licenses.mkdir(exist_ok=True)
     shutil.copy2(ROOT / 'THIRD_PARTY_NOTICES.md', licenses)
     shutil.copy2(ROOT / 'LICENSE', licenses / 'LICENSE.travel-photobook')
     (folder / 'CORRESPONDING_SOURCE.txt').write_text(
-        'Travel Photo Book 0.2.1 — GNU AGPL-3.0-only\n'
-        'Source and build instructions: https://github.com/wayneLin0525/travel-photobook-skill/tree/v0.2.1\n'
-        'Source archive: https://github.com/wayneLin0525/travel-photobook-skill/archive/refs/tags/v0.2.1.zip\n'
+        'Travel Photo Book 0.2.2 — GNU AGPL-3.0-only\n'
+        'Source and build instructions: https://github.com/wayneLin0525/travel-photobook-skill/tree/v0.2.2\n'
+        'Source archive: https://github.com/wayneLin0525/travel-photobook-skill/archive/refs/tags/v0.2.2.zip\n'
         'Dependency versions: runtime-environment.json; dependency notices: licenses/\n', encoding='utf-8')
     distributions = []
     for distribution in importlib.metadata.distributions():
@@ -74,14 +74,14 @@ def main():
                     dest = licenses / name / str(relative).replace('..', '_')
                     dest.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(path, dest)
     write(folder / 'runtime-environment.json', dict(platform=platform_tag(), python=sys.version, packages=distributions))
-    archive = ROOT / 'dist' / f'photobook-engine-0.2.1-{platform_tag()}.zip'
+    archive = ROOT / 'dist' / f'photobook-engine-0.2.2-{platform_tag()}.zip'
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:
         for path in sorted(folder.rglob('*')):
             if path.is_file():
                 z.write(path, path.relative_to(folder.parent).as_posix())
     digest = file_hash(archive)
     write(archive.with_suffix('.json'), dict(filename=archive.name, sha256=digest, bytes=archive.stat().st_size,
-                                            platform=platform_tag(), version='0.2.1', model_included=False))
+                                            platform=platform_tag(), version='0.2.2', model_included=False))
     if args.release_base_url:
         if not args.release_base_url.startswith('https://'):
             parser.error('release-base-url必须为真实HTTPS地址')

@@ -15,7 +15,7 @@ $expected = (Get-Content "$manifest.sha256" -Raw).Trim()
 if ($expected -notmatch '^[0-9a-f]{64}$') { throw '运行包校验值无效。' }
 $localRelease = $url.StartsWith('file://') -and $env:PHOTOBOOK_ALLOW_LOCAL_RELEASE -eq '1'
 if (!$url.StartsWith('https://') -and !$localRelease) { throw '运行包地址必须是HTTPS。' }
-$parent = Join-Path $cache 'runtime/0.2.1'
+$parent = Join-Path $cache 'runtime/0.2.2'
 $target = Join-Path $parent "$platform-$expected"
 $engine = Join-Path $target 'photobook-engine/photobook-engine.exe'
 if (!(Test-Path $engine) -or !(Test-Path (Join-Path $target '.ready'))) {

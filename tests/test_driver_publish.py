@@ -14,11 +14,11 @@ from tests.fixtures import make_photos, config, auto_answer
 from tests.test_web_export import ReviewedRun
 
 
-def test_publish_only_two_files_and_same_pages(tmp_path):
+def test_publish_only_three_files_and_same_pages(tmp_path):
     run = ReviewedRun(tmp_path)
     output = tmp_path / '成品/V1'
     result = deliver(run, output, edge=800)
-    assert {p.name for p in output.iterdir()} == {'照片书.pdf', '照片书.html'}
+    assert {p.name for p in output.iterdir()} == {'照片书.pdf', '照片书.html', '跨页总览.jpg'}
     with fitz.open(result['pdf']) as doc:
         assert len(doc) == 5
         assert 'cover.pdf' in doc[0].get_text()
@@ -29,6 +29,13 @@ def test_publish_only_two_files_and_same_pages(tmp_path):
     assert 'Permission is hereby granted' in text
     assert not re.search(r'<(?:script|link)[^>]+(?:src|href)=["\']https?://', text)
     assert len(list((run.root / 'deliveries').glob('*.json'))) == 1
+    from PIL import Image
+    with Image.open(result['overview']) as overview:
+        assert overview.format == 'JPEG' and overview.width > 2000
+    record = read(next((run.root / 'deliveries').glob('*.json')))
+    assert record['overview']['source_pdf_sha256'] == file_hash(result['pdf'])
+    assert record['overview']['spreads'] == [dict(label='封面',pdf_pages=[1]), dict(label='01',pdf_pages=[2]),
+                                            dict(label='02–03',pdf_pages=[3,4]), dict(label='04',pdf_pages=[5])]
     with pytest.raises(WorkflowError, match='不能覆盖'):
         deliver(run, output)
 
@@ -41,6 +48,17 @@ def test_no_partial_output_on_export_failure(tmp_path, monkeypatch):
     with pytest.raises(WorkflowError):
         deliver(run, tmp_path / 'V1')
     assert not (tmp_path / 'V1').exists()
+
+
+def test_no_partial_output_on_overview_failure(tmp_path, monkeypatch):
+    run = ReviewedRun(tmp_path)
+    def fail(*args, **kwargs):
+        raise WorkflowError('总览生成失败')
+    monkeypatch.setattr('photobook.publish.build_overview', fail)
+    with pytest.raises(WorkflowError, match='总览'):
+        deliver(run, tmp_path / 'V1')
+    assert not (tmp_path / 'V1').exists()
+    assert not list(tmp_path.glob('.photobook-publish-*'))
 
 
 def test_publish_rejects_fixture_mode(tmp_path):
@@ -76,6 +94,27 @@ def test_recovery_refuses_changed_result(tmp_path):
     (output/'照片书.html').write_text('changed')
     with pytest.raises(WorkflowError,match='哈希'):
         _recover_delivery(run,dict(output=str(output),delivery=None))
+
+
+def test_recovery_refuses_changed_overview(tmp_path):
+    from photobook.driver import _recover_delivery
+    run=ReviewedRun(tmp_path);output=tmp_path/'V1';files=deliver(run,output,edge=800)
+    Path(files['overview']).write_bytes(b'changed')
+    with pytest.raises(WorkflowError,match='哈希'):
+        _recover_delivery(run,dict(output=str(output),delivery=None))
+
+
+def test_recovery_preserves_legacy_two_file_delivery(tmp_path):
+    from photobook.driver import _recover_delivery
+    run=ReviewedRun(tmp_path);output=tmp_path/'V1';files=deliver(run,output,edge=800)
+    # A real v0.2.1 record had no overview; resuming it must not silently
+    # modify published results or claim a third file already exists.
+    Path(files.pop('overview')).unlink()
+    record=next((run.root/'deliveries').glob('*.json'));payload=read(record)
+    payload['final_files'].pop('跨页总览.jpg');payload.pop('overview');payload.pop('delivery_schema');write(record,payload)
+    job=dict(output=str(output),delivery=None);_recover_delivery(run,job)
+    assert job['delivery']['files']==files
+    assert {p.name for p in output.iterdir()}=={'照片书.pdf','照片书.html'}
 
 
 def job_fixture(tmp_path):

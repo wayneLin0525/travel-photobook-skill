@@ -25,10 +25,10 @@ def main():
             _, header, body = text.split('---', 2)
             data = yaml.safe_load(header)
             data.update(display_name='旅行照片书', display_name_en='Travel Photo Book',
-                        description_zh=data['description'], description_en='Turn a travel photo folder into a curated PDF and an offline flipbook HTML.',
-                        version='0.2.1', author=args.author)
+                        description_zh=data['description'], description_en='Turn a travel photo folder into a curated PDF, an offline flipbook HTML and a spread overview image.',
+                        version='0.2.2', author=args.author)
             path.write_text('---\n' + yaml.safe_dump(data, allow_unicode=True, sort_keys=False) + '---' + body, encoding='utf-8')
-        destination = ROOT / 'dist' / f'travel-photobook-0.2.1-{args.platform}.zip'
+        destination = ROOT / 'dist' / f'travel-photobook-0.2.2-{args.platform}.zip'
         destination.parent.mkdir(exist_ok=True)
         with zipfile.ZipFile(destination, 'w', zipfile.ZIP_DEFLATED) as z:
             for path in sorted(folder.rglob('*')):

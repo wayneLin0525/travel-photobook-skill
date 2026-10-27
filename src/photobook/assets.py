@@ -31,7 +31,7 @@ def _download_locked(url,destination,sha256,*,retries):
     last = None
     for attempt in range(retries):
         offset = partial.stat().st_size if partial.exists() else 0
-        headers = {'User-Agent': 'travel-photobook/0.2.1', 'Accept-Encoding': 'identity'}
+        headers = {'User-Agent': 'travel-photobook/0.2.2', 'Accept-Encoding': 'identity'}
         if offset:
             headers['Range'] = f'bytes={offset}-'
         try:

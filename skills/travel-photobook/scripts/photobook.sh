@@ -9,7 +9,7 @@ case "$(uname -s)-$(uname -m)" in
   Linux-x86_64) platform=linux-x64 ;;
   *) printf '%s\n' '尚未发布此系统/架构的运行包。' >&2; exit 2 ;;
 esac
-version=0.2.1
+version=0.2.2
 if [ -n "${PHOTOBOOK_CACHE:-}" ]; then cache=$PHOTOBOOK_CACHE
 elif [ "$(uname -s)" = Darwin ]; then cache="$HOME/Library/Caches/travel-photobook"
 else cache="${XDG_CACHE_HOME:-$HOME/.cache}/travel-photobook"; fi

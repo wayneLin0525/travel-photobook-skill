@@ -23,4 +23,4 @@ link. Do not describe the complete runtime bundle as MIT.
   their upstream terms. Installed package notices accompany runtime bundles.
 
 The runtime license directory is internal software distribution material. Users
-receive only their two book files; embedded resources retain the notices they need.
+receive their PDF, offline HTML and spread overview image; embedded resources retain the notices they need.

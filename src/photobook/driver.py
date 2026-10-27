@@ -280,11 +280,14 @@ def _recover_delivery(run,job):
         record=read(path)
         if record.get('destination')!=str(output):continue
         require(all(run.snapshot(s)['revision']==r for s,r in record['revisions'].items()),'现有成品与任务版本不同，不能恢复为完成')
-        require({p.name for p in output.iterdir()}=={'照片书.pdf','照片书.html'},'现有成品目录不是本任务的两个文件')
+        from .publish import DELIVERY_FILENAMES, LEGACY_FILENAMES
+        recorded_names=set(record['final_files'])
+        require(recorded_names in (set(DELIVERY_FILENAMES.values()), LEGACY_FILENAMES), '发布记录的成品文件集合无效')
+        require({p.name for p in output.iterdir()}==recorded_names,'现有成品目录与本任务的发布记录不符')
         for name,info in record['final_files'].items():
             require(file_hash(output/name)==info['sha256'],'现有成品哈希与发布记录不同')
         run.verify_sources()
-        files=dict(pdf=str(output/'照片书.pdf'),html=str(output/'照片书.html'))
+        files={key: str(output/name) for key,name in DELIVERY_FILENAMES.items() if name in recorded_names}
         job['delivery']=dict(files=files,sha256={k:file_hash(v) for k,v in files.items()},recovered_at=now())
         write(run.root/'job.json',job)
         record['status']='published';write(path,record)

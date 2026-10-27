@@ -18,7 +18,7 @@
 | NEEDS_VISION / NEEDS_LOCATION | 读取返回的task JSON，实际查看images中的所有图片；小字或表情不清时打开原图。按下节写答复，再submit-review |
 | NEEDS_CORRECTION | 查看实际问题，revise对应环节后重做；不能直接将问题清空 |
 | READY_TO_DELIVER | `引擎 deliver "job路径"` |
-| COMPLETE | 仅交付返回的pdf和html两个文件 |
+| COMPLETE | 交付返回的pdf、html和overview三个文件 |
 | BLOCKED / 非零退出 | 根据具体错误修正；有限次失败后说明阻塞，不声称完成 |
 
 答复保存在job内部，例如`job/answers/阶段-任务-轮次.json`，用`引擎 submit-review "job路径" "答复.json"`提交。然后继续advance。每任务至多三次提交；错误及旧答复保留。若已通过阶段需修正，用`引擎 revise "job路径" layout`等重新开启阶段；最多三轮。不要自行删除审阅响应、修改heads或伪造已通过快照。
@@ -52,4 +52,4 @@ city_status/place_status可为confirmed、inferred、unknown；kind可为ground�
 
 ## 输出与回溯
 
-只交付`照片书.pdf`与`照片书.html`，网页是本地离线文件。无需额外交付ZIP、说明、清单或缩略图。任务、逐张理由、地点证据、修正和发布哈希均在job内部；用户以后询问再读取。原照片只读，不移动、不覆盖。不能自动发布到公网。
+交付`照片书.pdf`、`照片书.html`与`跨页总览.jpg`三个成品。网页是本地离线文件；总览从最终合订PDF生成，包含封面和全部内页，按真实左右跨页排列并标注页码。无需用户额外要求总览。检查总览无漏页、错序或裁切；有问题修正后再交付。无需额外交付ZIP、说明、清单或其他缩略图。任务、逐张理由、地点证据、修正和发布哈希均在job内部；用户以后询问再读取。原照片只读，不移动、不覆盖。不能自动发布到公网。

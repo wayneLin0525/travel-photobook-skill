@@ -1,4 +1,4 @@
-"""Atomic two-file delivery. All provenance remains in the private job directory."""
+"""Atomic three-file delivery. All provenance remains in the private job directory."""
 from __future__ import annotations
 
 import shutil
@@ -10,6 +10,10 @@ import pymupdf as fitz
 
 from .core import file_hash, now, require, write
 from .web_export import build_reader
+from .overview import build_overview
+
+DELIVERY_FILENAMES = dict(pdf='照片书.pdf', html='照片书.html', overview='跨页总览.jpg')
+LEGACY_FILENAMES = {DELIVERY_FILENAMES[k] for k in ('pdf', 'html')}
 
 
 def verify_render(run):
@@ -61,10 +65,12 @@ def deliver(run, destination, *, version=None, edge=1600):
         (staging / '照片书.html').write_text(template, encoding='utf-8')
         with fitz.open(pdf_path) as doc:
             require(len(doc) == manifest['inner_pages'] + 1, '最终合订PDF页数错误')
-        require({p.name for p in staging.iterdir()} == {'照片书.pdf', '照片书.html'}, '成品目录必须恰好两个文件')
+        overview = build_overview(pdf_path, staging / DELIVERY_FILENAMES['overview'])
+        require({p.name for p in staging.iterdir()} == set(DELIVERY_FILENAMES.values()), '成品目录必须恰好三个文件')
         run.verify_sources()
         require(all(run.snapshot(s)['revision'] == rev for s, rev in snapshots.items()), '发布期间审阅版本发生变化')
-        manifest.update(published_at=now(), destination=str(destination), status='prepared',
+        manifest.update(published_at=now(), destination=str(destination), status='prepared', delivery_schema=2,
+                        overview=overview,
                         final_files={p.name: dict(sha256=file_hash(p), bytes=p.stat().st_size) for p in staging.iterdir()})
         record = run.root / 'deliveries' / (uuid.uuid4().hex + '.json')
         write(record, manifest)
@@ -74,4 +80,4 @@ def deliver(run, destination, *, version=None, edge=1600):
     finally:
         if staging.exists():
             shutil.rmtree(staging)
-    return dict(pdf=str(destination / '照片书.pdf'), html=str(destination / '照片书.html'))
+    return {key: str(destination / name) for key, name in DELIVERY_FILENAMES.items()}
